@@ -39,7 +39,7 @@ class GameScene: SKScene {
     let levelLabel = SKLabelNode(text: "Level: 1")
     var score = 0
     var level = 1
-    var wheelSpeed = 0.7
+    var wheelSpeed = 1.0
     
     override func didMove(to view: SKView) {
         layoutScene()
@@ -77,9 +77,18 @@ class GameScene: SKScene {
     func turnWheel(speed: TimeInterval) {
         let rotate = SKAction.rotate(byAngle: .pi/2, duration: speed)
         let changeColor = SKAction.run(changeColorInCircle)
-        let sequence = SKAction.sequence([changeColor, rotate])
+        let delay = SKAction.wait(forDuration: speed)
+        let sequence = SKAction.sequence([delay, changeColor])
+        
+        
         colorCircle.run(SKAction.repeatForever(sequence))
-   
+        colorCircle.run(SKAction.repeatForever(rotate))
+        
+//        let sequence = SKAction.sequence([rotate, changeColor])
+//        colorCircle.run(SKAction.repeatForever(sequence))
+        
+        
+        
     }
     
     func changeColorInCircle() {
@@ -102,6 +111,7 @@ class GameScene: SKScene {
         currentColorIndex = Int(arc4random_uniform(UInt32(4)))
         
         ball = SKSpriteNode(texture: SKTexture(imageNamed: "ball"), color: PlayColors.colors[currentColorIndex!], size: CGSize(width: 40.0, height: 40.0))
+//        print("Ball is:", SwitchState.init(rawValue: currentColorIndex!) ?? .red)
         ball.colorBlendFactor = 1.0
         ball.name = "Ball"
         ball.position = CGPoint(x: frame.midX, y: frame.minY + 20)
@@ -117,7 +127,6 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         ball.physicsBody?.isDynamic = true
         physicsWorld.gravity = CGVector(dx: 0.0, dy: 20.0)
-        spawnBall()
     }
     
     
@@ -133,12 +142,16 @@ extension GameScene: SKPhysicsContactDelegate {
                 if currentColorIndex == switchState.rawValue {
                     score += 1
                     //run(SKAction.playSoundFileNamed("bling", waitForCompletion: false))
+                    scoreLabel.text = "\(score)"
                     print("Certo")
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: {
                         ball.removeFromParent()
+                        self.spawnBall()
                     })
                 }else {
                     gameOver()
+                    spawnBall()
+
                 }
             }
         }
