@@ -8,39 +8,38 @@
 
 import SpriteKit
 
+private let red = UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0)
+private let yellow = UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0)
+private let green = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0)
+private let blue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
+
 enum PlayColors {
-    
-    
-    static let colors = [
-        UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
-        UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
-        UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0),
-        UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0),
-        
-        ]
-    
-    
+    //static let colors = [red,yellow,green,blue,]
+    static let colors = [green, blue, red, yellow]
 }
 
 
 enum SwitchState: Int {
     
-    case red, yellow, green, blue
+    //case red, yellow, green, blue
+    case green, blue, red, yellow
     
 }
+
+
 
 class GameScene: SKScene {
     
     var colorCircle: SKSpriteNode!
     var ball: SKSpriteNode!
-    var switchState = SwitchState.red
+    var switchState = SwitchState.green
     var currentColorIndex: Int?
     
     let scoreLabel = SKLabelNode(text: "0")
     let levelLabel = SKLabelNode(text: "Level: 1")
     var score = 0
     var level = 1
-    var wheelSpeed = 2.0
+    var wheelSpeed = 0.7
     
     override func didMove(to view: SKView) {
         layoutScene()
@@ -88,15 +87,13 @@ class GameScene: SKScene {
             switchState = newState
             print("Color is:", switchState)
         }else {
-            switchState = .red
+            switchState = .green
             print("Color is:", switchState)
 
         }
         
     }
-    
 
-    
     func gameOver() {
         print("Errado")
     }
@@ -119,7 +116,7 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         ball.physicsBody?.isDynamic = true
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: 9.0)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: 20.0)
         spawnBall()
     }
     
@@ -139,7 +136,6 @@ extension GameScene: SKPhysicsContactDelegate {
                     print("Certo")
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: {
                         ball.removeFromParent()
-                        self.spawnBall()
                     })
                 }else {
                     gameOver()
