@@ -10,6 +10,7 @@ import SpriteKit
 
 enum PlayColors {
     
+    
     static let colors = [
         UIColor(red: 231/255, green: 76/255, blue: 60/255, alpha: 1.0),
         UIColor(red: 241/255, green: 196/255, blue: 15/255, alpha: 1.0),
@@ -17,7 +18,10 @@ enum PlayColors {
         UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0),
         
         ]
+    
+    
 }
+
 
 enum SwitchState: Int {
     
@@ -36,11 +40,12 @@ class GameScene: SKScene {
     let levelLabel = SKLabelNode(text: "Level: 1")
     var score = 0
     var level = 1
-    var wheelSpeed = 0.7
+    var wheelSpeed = 2.0
     
     override func didMove(to view: SKView) {
         layoutScene()
         turnWheel(speed: wheelSpeed)
+        physicsWorld.contactDelegate = self
     }
     
     func layoutScene() {
@@ -72,7 +77,28 @@ class GameScene: SKScene {
     
     func turnWheel(speed: TimeInterval) {
         let rotate = SKAction.rotate(byAngle: .pi/2, duration: speed)
-        colorCircle.run(SKAction.repeatForever(rotate))
+        let changeColor = SKAction.run(changeColorInCircle)
+        let sequence = SKAction.sequence([changeColor, rotate])
+        colorCircle.run(SKAction.repeatForever(sequence))
+   
+    }
+    
+    func changeColorInCircle() {
+        if let newState = SwitchState(rawValue: switchState.rawValue + 1) {
+            switchState = newState
+            print("Color is:", switchState)
+        }else {
+            switchState = .red
+            print("Color is:", switchState)
+
+        }
+        
+    }
+    
+
+    
+    func gameOver() {
+        print("Errado")
     }
     
     func spawnBall() {
@@ -100,6 +126,31 @@ class GameScene: SKScene {
     
 }
 
+extension GameScene: SKPhysicsContactDelegate {
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let contactMask = contact.bodyA.categoryBitMask | contact.bodyB.categoryBitMask
+        
+        if contactMask == PhysicsCategories.switchCategory | PhysicsCategories.ballCategory {
+            if let ball = contact.bodyA.node?.name == "Ball" ? contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as? SKSpriteNode {
+                if currentColorIndex == switchState.rawValue {
+                    score += 1
+                    //run(SKAction.playSoundFileNamed("bling", waitForCompletion: false))
+                    print("Certo")
+                    ball.run(SKAction.fadeOut(withDuration: 0.25), completion: {
+                        ball.removeFromParent()
+                        self.spawnBall()
+                    })
+                }else {
+                    gameOver()
+                }
+            }
+        }
+
+    }
+    
+    
+}
 
 
 
