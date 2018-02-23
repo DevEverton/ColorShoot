@@ -20,7 +20,7 @@ enum PlayColors {
 
 enum SwitchState: Int {
     
-    case green = 0, blue = 1, red = 2, yellow = 3
+    case green, blue, red, yellow
     
 }
 
@@ -30,31 +30,52 @@ class GameScene: SKScene {
     var ball: SKSpriteNode!
     var switchState = SwitchState.green
     var currentColorIndex: Int?
+    var timer = Timer()
+    var counter = 3
     
     let scoreLabel = SKLabelNode(text: "0")
-    let levelLabel = SKLabelNode(text: "Level: 1")
-    var gravity = 30.0
+    let timerLabel = SKLabelNode(text: "3")
+    var ballSpeed = 30.0
     var score = 0
-    var level = 1
     var wheelSpeed = 0.5
+
     
     override func didMove(to view: SKView) {
         layoutScene()
         turnWheel(speed: wheelSpeed)
+        createTimer()
+        
         physicsWorld.contactDelegate = self
         
-        
         let swipeUp : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedUp))
-        
         swipeUp.direction = .up
         view.addGestureRecognizer(swipeUp)
     }
     
     @objc func swipedUp() {
         ball.physicsBody?.isDynamic = true
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravity)
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: ballSpeed)
     }
     
+    func createTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.updateTimer), userInfo: nil, repeats: true)
+        animateTimer()
+    }
+    
+    func animateTimer() {
+        let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+        let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+        let sequence = SKAction.sequence([scaleUp,scaleDown])
+        timerLabel.run(SKAction.repeatForever(sequence))
+    }
+    
+    @objc func updateTimer() {
+        counter -= 1
+        timerLabel.text = "\(counter)"
+        if counter == 0 {
+            gameOver()
+        }
+    }
     
     func layoutScene() {
         backgroundColor = .white
@@ -70,6 +91,7 @@ class GameScene: SKScene {
 //        levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         addLabel(label: scoreLabel, position: CGPoint(x: frame.midX, y: frame.maxY - 10), size: 50.0 )
         scoreLabel.verticalAlignmentMode = SKLabelVerticalAlignmentMode.top
+        addLabel(label: timerLabel, position: CGPoint(x: frame.midX, y: frame.midY), size: 40)
         spawnBall()
 
     }
@@ -96,7 +118,7 @@ class GameScene: SKScene {
     
     func increaseSpeed(to speed: Double, ballGravity: Double) {
         wheelSpeed = speed
-        gravity = ballGravity
+        ballSpeed = ballGravity
     }
     
 
@@ -106,11 +128,12 @@ class GameScene: SKScene {
         }else {
             switchState = .green
         }
-        
     }
 
     func gameOver() {
-        print("Errado")
+        print("Fim de jogo")
+        timer.invalidate()
+        timerLabel.text = "Game Over!"
     }
     
     func spawnBall() {
@@ -127,6 +150,9 @@ class GameScene: SKScene {
         ball.physicsBody?.isDynamic = false
         addChild(ball)
         
+        counter = 4
+        
+  
     }
     
     
@@ -149,8 +175,7 @@ extension GameScene: SKPhysicsContactDelegate {
                     })
                 }else {
                     gameOver()
-                    spawnBall()
-
+                    
                 }
             }
         }
