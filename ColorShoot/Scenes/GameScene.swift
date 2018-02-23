@@ -14,19 +14,15 @@ private let green = UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1
 private let blue = UIColor(red: 52/255, green: 152/255, blue: 219/255, alpha: 1.0)
 
 enum PlayColors {
-    //static let colors = [red,yellow,green,blue,]
     static let colors = [green, blue, red, yellow]
 }
 
 
 enum SwitchState: Int {
     
-    //case red, yellow, green, blue
-    case green, blue, red, yellow
+    case green = 0, blue = 1, red = 2, yellow = 3
     
 }
-
-
 
 class GameScene: SKScene {
     
@@ -37,15 +33,28 @@ class GameScene: SKScene {
     
     let scoreLabel = SKLabelNode(text: "0")
     let levelLabel = SKLabelNode(text: "Level: 1")
+    var gravity = 30.0
     var score = 0
     var level = 1
-    var wheelSpeed = 1.0
+    var wheelSpeed = 0.5
     
     override func didMove(to view: SKView) {
         layoutScene()
         turnWheel(speed: wheelSpeed)
         physicsWorld.contactDelegate = self
+        
+        
+        let swipeUp : UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(GameScene.swipedUp))
+        
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
     }
+    
+    @objc func swipedUp() {
+        ball.physicsBody?.isDynamic = true
+        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravity)
+    }
+    
     
     func layoutScene() {
         backgroundColor = .white
@@ -57,8 +66,8 @@ class GameScene: SKScene {
         colorCircle.physicsBody?.isDynamic = false
         addChild(colorCircle)
         
-        addLabel(label: levelLabel, position: CGPoint(x: frame.minX + 10, y: frame.minY + 10), size: 20.0)
-        levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
+//        addLabel(label: levelLabel, position: CGPoint(x: frame.minX + 10, y: frame.minY + 10), size: 20.0)
+//        levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         addLabel(label: scoreLabel, position: CGPoint(x: frame.midX, y: frame.maxY - 10), size: 50.0 )
         scoreLabel.verticalAlignmentMode = SKLabelVerticalAlignmentMode.top
         spawnBall()
@@ -79,26 +88,23 @@ class GameScene: SKScene {
         let changeColor = SKAction.run(changeColorInCircle)
         let delay = SKAction.wait(forDuration: speed)
         let sequence = SKAction.sequence([delay, changeColor])
-        
-        
+
         colorCircle.run(SKAction.repeatForever(sequence))
         colorCircle.run(SKAction.repeatForever(rotate))
-        
-//        let sequence = SKAction.sequence([rotate, changeColor])
-//        colorCircle.run(SKAction.repeatForever(sequence))
-        
-        
-        
+  
     }
     
+    func increaseSpeed(to speed: Double, ballGravity: Double) {
+        wheelSpeed = speed
+        gravity = ballGravity
+    }
+    
+
     func changeColorInCircle() {
         if let newState = SwitchState(rawValue: switchState.rawValue + 1) {
             switchState = newState
-            print("Color is:", switchState)
         }else {
             switchState = .green
-            print("Color is:", switchState)
-
         }
         
     }
@@ -110,11 +116,10 @@ class GameScene: SKScene {
     func spawnBall() {
         currentColorIndex = Int(arc4random_uniform(UInt32(4)))
         
-        ball = SKSpriteNode(texture: SKTexture(imageNamed: "ball"), color: PlayColors.colors[currentColorIndex!], size: CGSize(width: 40.0, height: 40.0))
-//        print("Ball is:", SwitchState.init(rawValue: currentColorIndex!) ?? .red)
+        ball = SKSpriteNode(texture: SKTexture(imageNamed: "ball"), color: PlayColors.colors[currentColorIndex!], size: CGSize(width: 50.0, height: 50.0))
         ball.colorBlendFactor = 1.0
         ball.name = "Ball"
-        ball.position = CGPoint(x: frame.midX, y: frame.minY + 20)
+        ball.position = CGPoint(x: frame.midX, y: frame.minY + 25)
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory
@@ -122,11 +127,6 @@ class GameScene: SKScene {
         ball.physicsBody?.isDynamic = false
         addChild(ball)
         
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        ball.physicsBody?.isDynamic = true
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: 20.0)
     }
     
     
@@ -140,10 +140,9 @@ extension GameScene: SKPhysicsContactDelegate {
         if contactMask == PhysicsCategories.switchCategory | PhysicsCategories.ballCategory {
             if let ball = contact.bodyA.node?.name == "Ball" ? contact.bodyA.node as? SKSpriteNode : contact.bodyB.node as? SKSpriteNode {
                 if currentColorIndex == switchState.rawValue {
+                    run(SKAction.playSoundFileNamed("bling", waitForCompletion: false))
                     score += 1
-                    //run(SKAction.playSoundFileNamed("bling", waitForCompletion: false))
                     scoreLabel.text = "\(score)"
-                    print("Certo")
                     ball.run(SKAction.fadeOut(withDuration: 0.25), completion: {
                         ball.removeFromParent()
                         self.spawnBall()
