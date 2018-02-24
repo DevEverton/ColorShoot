@@ -119,6 +119,12 @@ class GameScene: SKScene {
 
     func gameOver() {
         timer.invalidate()
+        UserDefaults.standard.set(score, forKey: "Score")
+        
+        if score > UserDefaults.standard.integer(forKey: "NewRecord") {
+            UserDefaults.standard.set(score, forKey: "NewRecord")
+        }
+        
         let gameOverScene = GameOverScene(size: view!.bounds.size)
         view!.presentScene(gameOverScene)
     }
