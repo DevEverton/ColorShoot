@@ -59,15 +59,9 @@ class GameScene: SKScene {
     
     func createTimer() {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.updateTimer), userInfo: nil, repeats: true)
-        animateTimer()
+        animateLabel(timerLabel)
     }
     
-    func animateTimer() {
-        let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
-        let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
-        let sequence = SKAction.sequence([scaleUp,scaleDown])
-        timerLabel.run(SKAction.repeatForever(sequence))
-    }
     
     @objc func updateTimer() {
         counter -= 1
@@ -96,14 +90,7 @@ class GameScene: SKScene {
 
     }
     
-    
-    func addLabel(label: SKLabelNode, position: CGPoint, size: CGFloat) {
-        label.fontName = "AvenirNext-Bold"
-        label.fontSize = size
-        label.fontColor = UIColor(red: 44/255, green: 62/255, blue: 80/255, alpha: 1.0)
-        label.position = position
-        addChild(label)
-    }
+
     
     func turnWheel(speed: TimeInterval) {
         let rotate = SKAction.rotate(byAngle: .pi/2, duration: speed)
@@ -131,9 +118,9 @@ class GameScene: SKScene {
     }
 
     func gameOver() {
-        print("Fim de jogo")
         timer.invalidate()
-        timerLabel.text = "Game Over!"
+        let gameOverScene = GameOverScene(size: view!.bounds.size)
+        view!.presentScene(gameOverScene)
     }
     
     func spawnBall() {
@@ -149,7 +136,6 @@ class GameScene: SKScene {
         ball.physicsBody?.collisionBitMask = PhysicsCategories.none
         ball.physicsBody?.isDynamic = false
         addChild(ball)
-        
         counter = 4
         
   
@@ -181,10 +167,27 @@ extension GameScene: SKPhysicsContactDelegate {
         }
 
     }
-    
-    
+   
 }
 
+extension SKScene {
+    
+    func addLabel(label: SKLabelNode, position: CGPoint, size: CGFloat) {
+        label.fontName = "AvenirNext-Bold"
+        label.fontSize = size
+        label.fontColor = UIColor(red: 44/255, green: 62/255, blue: 80/255, alpha: 1.0)
+        label.position = position
+        addChild(label)
+    }
+    
+    func animateLabel(_ label: SKLabelNode) {
+        let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
+        let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+        let sequence = SKAction.sequence([scaleUp,scaleDown])
+        label.run(SKAction.repeatForever(sequence))
+    }
+    
+}
 
 
 
