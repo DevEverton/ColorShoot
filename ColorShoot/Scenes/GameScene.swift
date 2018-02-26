@@ -79,12 +79,14 @@ class GameScene: SKScene {
         colorCircle.physicsBody = SKPhysicsBody(circleOfRadius: colorCircle.size.width/2)
         colorCircle.physicsBody?.categoryBitMask = PhysicsCategories.switchCategory
         colorCircle.physicsBody?.isDynamic = false
+        colorCircle.zPosition = 0
         addChild(colorCircle)
         
 //        addLabel(label: levelLabel, position: CGPoint(x: frame.minX + 10, y: frame.minY + 10), size: 20.0)
 //        levelLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         addLabel(label: scoreLabel, position: CGPoint(x: frame.midX, y: frame.maxY - 10), size: 50.0 )
         scoreLabel.verticalAlignmentMode = SKLabelVerticalAlignmentMode.top
+        scoreLabel.zPosition = 1
         addLabel(label: timerLabel, position: CGPoint(x: frame.midX, y: frame.midY), size: 40)
         spawnBall()
 

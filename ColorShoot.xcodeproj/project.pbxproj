@@ -14,6 +14,7 @@
 		502F6FE3203DEB9100939D4E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 502F6FE1203DEB9100939D4E /* LaunchScreen.storyboard */; };
 		502F6FEF203DEC9400939D4E /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502F6FEE203DEC9400939D4E /* GameScene.swift */; };
 		502F6FF1203DF03F00939D4E /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502F6FF0203DF03F00939D4E /* Settings.swift */; };
+		5061BE0B2043114F00CEA10D /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5061BE0A2043114E00CEA10D /* MenuScene.swift */; };
 		50BE4E57203F5EEA00A01105 /* bling.wav in Resources */ = {isa = PBXBuildFile; fileRef = 50BE4E56203F5EEA00A01105 /* bling.wav */; };
 		50BE4E592041BAD100A01105 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50BE4E582041BAD000A01105 /* GameOverScene.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		502F6FE4203DEB9100939D4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		502F6FEE203DEC9400939D4E /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		502F6FF0203DF03F00939D4E /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		5061BE0A2043114E00CEA10D /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		50BE4E56203F5EEA00A01105 /* bling.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = bling.wav; sourceTree = "<group>"; };
 		50BE4E582041BAD000A01105 /* GameOverScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +86,7 @@
 			children = (
 				502F6FEE203DEC9400939D4E /* GameScene.swift */,
 				50BE4E582041BAD000A01105 /* GameOverScene.swift */,
+				5061BE0A2043114E00CEA10D /* MenuScene.swift */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -184,6 +187,7 @@
 				50BE4E592041BAD100A01105 /* GameOverScene.swift in Sources */,
 				502F6FEF203DEC9400939D4E /* GameScene.swift in Sources */,
 				502F6FDB203DEB9100939D4E /* GameViewController.swift in Sources */,
+				5061BE0B2043114F00CEA10D /* MenuScene.swift in Sources */,
 				502F6FF1203DF03F00939D4E /* Settings.swift in Sources */,
 				502F6FD3203DEB9100939D4E /* AppDelegate.swift in Sources */,
 			);
