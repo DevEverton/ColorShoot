@@ -127,6 +127,8 @@ class GameScene: SKScene {
             UserDefaults.standard.set(score, forKey: "NewRecord")
         }
         
+        NotificationCenter.default.post(name: Notification.Name("showIntersticialAd"), object: self)
+        
         let gameOverScene = GameOverScene(size: view!.bounds.size)
         view!.presentScene(gameOverScene)
     }

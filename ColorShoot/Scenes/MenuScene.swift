@@ -24,13 +24,13 @@ class MenuScene: SKScene {
         backgroundColor = .white
         colorCircle = SKSpriteNode(imageNamed: "ColorCircle")
         colorCircle.size = CGSize(width: frame.size.width - 50, height: frame.size.width - 50)
-        colorCircle.position = CGPoint(x: frame.midX, y: frame.midY)
+        colorCircle.position = CGPoint(x: frame.midX, y: frame.midY + 50)
         colorCircle.zPosition = 0
         addChild(colorCircle)
         let rotate = SKAction.rotate(byAngle: .pi/2, duration: 1.0)
         colorCircle.run(SKAction.repeatForever(rotate))
         
-        addLabel(label: gameName, position: CGPoint(x: frame.midX, y: frame.midY), size: 32.0)
+        addLabel(label: gameName, position: CGPoint(x: frame.midX, y: frame.midY + 50), size: 32.0)
         gameName.verticalAlignmentMode = SKLabelVerticalAlignmentMode.center
         gameName.fontName = "AvenirNext-Heavy"
         gameName.zPosition = 1
