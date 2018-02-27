@@ -18,7 +18,9 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         interstitial = createAndLoadInterstitial()
+
         NotificationCenter.default.addObserver(self, selector: #selector(GameViewController.showIntersticialAd), name: Notification.Name("showIntersticialAd"), object: nil)
+        
         if let view = self.view as! SKView? {
             let scene = MenuScene(size: view.bounds.size)
             scene.scaleMode = .aspectFill

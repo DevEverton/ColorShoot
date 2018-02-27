@@ -13,9 +13,10 @@ class MenuScene: SKScene {
     let gameName = SKLabelNode(text: "Color Shoot")
     let lastScore = SKLabelNode(text: "Last: \(UserDefaults.standard.integer(forKey: "Score"))")
     let record = SKLabelNode(text: "Record: \(UserDefaults.standard.integer(forKey: "NewRecord"))")
-    let play = SKLabelNode(text: "Tap to play")
+    let playLabel = SKLabelNode(text: "Tap to play")
+    let removeAds = SKLabelNode(text:"Remove ads")
     var colorCircle: SKSpriteNode!
-
+    
     override func didMove(to view: SKView) {
         layoutScene()
     }
@@ -38,16 +39,28 @@ class MenuScene: SKScene {
         lastScore.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.left
         addLabel(label: record, position: CGPoint(x: frame.maxX, y: frame.maxY - 20), size: 22.0)
         record.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.right
-        addLabel(label: play, position: CGPoint(x: frame.midX, y: frame.midY - 200), size: 25.0)
-        animateLabel(play)
-
+        addLabel(label: playLabel, position: CGPoint(x: frame.midX, y: frame.midY - 175), size: 25.0)
+        playLabel.name = "Play Button"
+        animateLabel(playLabel)
+        addLabel(label: removeAds, position: CGPoint(x: frame.midX, y: frame.midY - 225), size: 22.0)
+        removeAds.name = "Remove Ads"
+        animateLabel(removeAds)
+        
     }
-    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let gameScene = GameScene(size: view!.bounds.size)
-        view!.presentScene(gameScene)
+        
+        for touch in touches{
+            let location = touch.location(in: self)
+            let touchNode = atPoint(location)
+            
+            if touchNode.name == "Play Button" {
+                let gameScene = GameScene(size: view!.bounds.size)
+                view!.presentScene(gameScene)
+                return
+            }else if touchNode.name == "Remove Ads" {
+                
+            }
+        }
     }
-    
-    
 }
