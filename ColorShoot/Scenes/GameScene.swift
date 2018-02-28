@@ -59,6 +59,7 @@ class GameScene: SKScene {
     
     func createTimer() {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.updateTimer), userInfo: nil, repeats: true)
+        timerLabel.zPosition = 0
         animateLabel(timerLabel)
     }
     
@@ -138,6 +139,7 @@ class GameScene: SKScene {
         ball.colorBlendFactor = 1.0
         ball.name = "Ball"
         ball.position = CGPoint(x: frame.midX, y: frame.minY + 25)
+        ball.zPosition = 1
         ball.physicsBody = SKPhysicsBody(circleOfRadius: ball.size.width/2)
         ball.physicsBody?.categoryBitMask = PhysicsCategories.ballCategory
         ball.physicsBody?.contactTestBitMask = PhysicsCategories.switchCategory
